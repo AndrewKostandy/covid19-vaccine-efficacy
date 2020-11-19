@@ -170,10 +170,6 @@ ggsave("plots/mcmc_areas.pdf", dpi = "retina", width = 12, height = 8)
 mean(posterior$pfizer_vaccine_efficacy>posterior$moderna_vaccine_efficacy)
 ```
 
-```{r}
-RNGkind()
-```
-
 
 
 
