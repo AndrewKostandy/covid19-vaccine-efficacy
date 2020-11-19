@@ -121,7 +121,7 @@ mcmc_intervals(posterior,
 ```
 
 ```{r}
-ggsave("mcmc_intervals.pdf", dpi = "retina", width = 12, height = 8)
+ggsave("plots/mcmc_intervals.pdf", dpi = "retina", width = 12, height = 8)
 ```
 
 ```{r, message=FALSE, fig.width=6}
@@ -153,7 +153,7 @@ mcmc_areas(
 ```
 
 ```{r}
-ggsave("mcmc_areas.pdf", dpi = "retina", width = 12, height = 8)
+ggsave("plots/mcmc_areas.pdf", dpi = "retina", width = 12, height = 8)
 ```
 
 
@@ -162,6 +162,9 @@ ggsave("mcmc_areas.pdf", dpi = "retina", width = 12, height = 8)
 mean(posterior$pfizer_vaccine_efficacy>posterior$moderna_vaccine_efficacy)
 ```
 
+```{r}
+RNGkind()
+```
 
 
 
