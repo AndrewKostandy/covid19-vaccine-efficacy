@@ -121,6 +121,10 @@ mcmc_intervals(posterior,
 ```
 
 ```{r}
+ggsave("plots/mcmc_intervals.png", dpi = "retina", width = 12, height = 8)
+```
+
+```{r}
 ggsave("plots/mcmc_intervals.pdf", dpi = "retina", width = 12, height = 8)
 ```
 
@@ -150,6 +154,10 @@ mcmc_areas(
     )
   ) +
   theme(text = element_text(size = 15), plot.caption = element_text(hjust = 0))
+```
+
+```{r}
+ggsave("plots/mcmc_areas.png", dpi = "retina", width = 12, height = 8)
 ```
 
 ```{r}
