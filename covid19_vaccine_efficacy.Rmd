@@ -103,7 +103,11 @@ mcmc_intervals(posterior,
   scale_y_discrete(labels = c("Pfizer/\nBioNTech\n(8:162)\n(n=43,538)", "Moderna\n(5:90)\n(n=30,000)")) +
   labs(
     title = "COVID-19 Vaccine Efficacy Rates Estimation for Moderna & Pfizer/BioNTech (Posterior Distributions)",
-    subtitle = "Dark blue lines show 50% credible intervals\nLight blue lines show 90% credible intervals\nPoints show median values",
+    subtitle = paste0(
+      "Dark blue lines show 50% credible intervals",
+      "\nLight blue lines show 90% credible intervals",
+      "\nPoints show median values"
+    ),
     caption = paste0(
       "Based on a Bayesian model using an uninformative uniform prior of rate & a binomial likelihood for the data.",
       "\nModel fit with Stan using Hamiltonian MCMC.",
@@ -128,7 +132,10 @@ mcmc_areas(
   scale_y_discrete(labels = c("Pfizer/\nBioNTech\n(8:162)\n(n=43,538)", "Moderna\n(5:90)\n(n=30,000)")) +
   labs(
     title = "COVID-19 Vaccine Efficacy Rates Estimation for Moderna & Pfizer/BioNTech (Posterior Distributions)",
-    subtitle = "Shaded regions show 95% credible intervals\nSolid lines show median values",
+    subtitle = paste0(
+      "Shaded regions show 95% credible intervals",
+      "\nSolid lines show median values"
+    ),
     caption = paste0(
       "Based on a Bayesian model using an uninformative uniform prior of rate & a binomial likelihood for the data.",
       "\nModel fit with Stan using Hamiltonian MCMC.",
