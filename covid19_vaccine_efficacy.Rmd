@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(rstan)
 library(ggplot2)
 library(bayesplot)
+library(scales)
 options(mc.cores = parallel::detectCores()-2)
 ```
 
@@ -21,61 +22,61 @@ options(mc.cores = parallel::detectCores()-2)
 model_string <- "
 data {
 // Moderna
-  int moderna_vacc_n1; // Number of trials - vaccine
-  int moderna_vacc_s1; // Number of infections - vaccine
+  int moderna_vacc_n; // Number of trials - vaccine
+  int moderna_vacc_s; // Number of infections - vaccine
   
-  int moderna_plac_n2; // Number of trials - placebo
-  int moderna_plac_s2; // Number of infections - placebo
+  int moderna_plac_n; // Number of trials - placebo
+  int moderna_plac_s; // Number of infections - placebo
   
 // Pfizer
-  int pfizer_vacc_n1; // Number of trials - vaccine
-  int pfizer_vacc_s1; // Number of infections - vaccine
+  int pfizer_vacc_n; // Number of trials - vaccine
+  int pfizer_vacc_s; // Number of infections - vaccine
   
-  int pfizer_plac_n2; // Number of trials - placebo
-  int pfizer_plac_s2; // Number of infections - placebo
+  int pfizer_plac_n; // Number of trials - placebo
+  int pfizer_plac_s; // Number of infections - placebo
 }
 
 
 parameters {
 
 // Moderna
-  real<lower=0, upper=1> moderna_vacc_rate1;
-  real<lower=0, upper=1> moderna_plac_rate2;
+  real<lower=0, upper=1> moderna_vacc_rate;
+  real<lower=0, upper=1> moderna_plac_rate;
 
 // Pfizer
-  real<lower=0, upper=1> pfizer_vacc_rate1;
-  real<lower=0, upper=1> pfizer_plac_rate2;
+  real<lower=0, upper=1> pfizer_vacc_rate;
+  real<lower=0, upper=1> pfizer_plac_rate;
 }
 
 
 model {
 
 // Moderna
-  moderna_vacc_rate1 ~ uniform(0, 1);
-  moderna_vacc_s1 ~ binomial(moderna_vacc_n1, moderna_vacc_rate1);
+  moderna_vacc_rate ~ uniform(0, 1);
+  moderna_vacc_s ~ binomial(moderna_vacc_n, moderna_vacc_rate);
   
-  moderna_plac_rate2 ~ uniform(0,1);
-  moderna_plac_s2 ~ binomial(moderna_plac_n2, moderna_plac_rate2);
+  moderna_plac_rate ~ uniform(0,1);
+  moderna_plac_s ~ binomial(moderna_plac_n, moderna_plac_rate);
 
 // Pfizer
-  pfizer_vacc_rate1 ~ uniform(0, 1);
-  pfizer_vacc_s1 ~ binomial(pfizer_vacc_n1, pfizer_vacc_rate1);
+  pfizer_vacc_rate ~ uniform(0, 1);
+  pfizer_vacc_s ~ binomial(pfizer_vacc_n, pfizer_vacc_rate);
   
-  pfizer_plac_rate2 ~ uniform(0,1);
-  pfizer_plac_s2 ~ binomial(pfizer_plac_n2, pfizer_plac_rate2);
+  pfizer_plac_rate ~ uniform(0,1);
+  pfizer_plac_s ~ binomial(pfizer_plac_n, pfizer_plac_rate);
 }
 
 
 generated quantities {
   real moderna_vaccine_efficacy;
   real pfizer_vaccine_efficacy;
-  moderna_vaccine_efficacy = 1-((moderna_vacc_rate1*moderna_vacc_n1) / (moderna_plac_rate2*moderna_plac_n2));
-  pfizer_vaccine_efficacy = 1-((pfizer_vacc_rate1*pfizer_vacc_n1) / (pfizer_plac_rate2*pfizer_plac_n2));
+  moderna_vaccine_efficacy = 1-((moderna_vacc_rate*moderna_vacc_n) / (moderna_plac_rate*moderna_plac_n));
+  pfizer_vaccine_efficacy = 1-((pfizer_vacc_rate*pfizer_vacc_n) / (pfizer_plac_rate*pfizer_plac_n));
 }
 "
 
-data_list <- list(moderna_vacc_n1 = 15000, moderna_vacc_s1 = 5, moderna_plac_n2 = 15000, moderna_plac_s2 = 90,
-                  pfizer_vacc_n1 = 21769, pfizer_vacc_s1 = 8, pfizer_plac_n2 = 21769, pfizer_plac_s2 = 162)
+data_list <- list(moderna_vacc_n = 15000, moderna_vacc_s = 5, moderna_plac_n = 15000, moderna_plac_s = 90,
+                  pfizer_vacc_n = 21769, pfizer_vacc_s = 8, pfizer_plac_n = 21769, pfizer_plac_s = 162)
 
 # Compiling and producing posterior samples from the model.
 set.seed(2020)
@@ -99,7 +100,7 @@ mcmc_intervals(posterior,
   prob_outer = 0.9,
   point_est = "median"
 ) +
-  scale_x_continuous(breaks = seq(0, 1, 0.01), labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(breaks = seq(0, 1, 0.01), labels = percent_format(accuracy = 1)) +
   scale_y_discrete(labels = c("Pfizer/\nBioNTech\n(8:162)\n(n=43,538)", "Moderna\n(5:90)\n(n=30,000)")) +
   labs(
     title = "COVID-19 Vaccine Efficacy Rates Estimation for Moderna & Pfizer/BioNTech (Posterior Distributions)",
@@ -136,7 +137,7 @@ mcmc_areas(
   prob_outer = 1,
   point_est = "median"
 ) +
-  scale_x_continuous(breaks = seq(0, 1, 0.02), labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(breaks = seq(0, 1, 0.02), labels = percent_format(accuracy = 1)) +
   scale_y_discrete(labels = c("Pfizer/\nBioNTech\n(8:162)\n(n=43,538)", "Moderna\n(5:90)\n(n=30,000)")) +
   labs(
     title = "COVID-19 Vaccine Efficacy Rates Estimation for Moderna & Pfizer/BioNTech (Posterior Distributions)",
