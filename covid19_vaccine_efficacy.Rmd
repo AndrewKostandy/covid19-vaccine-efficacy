@@ -16,7 +16,7 @@ library(bayesplot)
 options(mc.cores = parallel::detectCores()-2)
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 # The Stan model as a string.
 model_string <- "
 data {
@@ -92,14 +92,14 @@ posterior <- as.data.frame(stan_samples)
 head(posterior)
 ```
 
-```{r, message=FALSE, fig.width=7}
+```{r, message=FALSE, fig.width=6}
 mcmc_intervals(posterior,
   pars = c("pfizer_vaccine_efficacy", "moderna_vaccine_efficacy"),
   prob = 0.5,
   prob_outer = 0.9,
   point_est = "median"
 ) +
-  scale_x_continuous(breaks = seq(0, 1, 0.05), labels = scales::percent_format(accuracy = 1), limits = c(0.85, 1)) +
+  scale_x_continuous(breaks = seq(0, 1, 0.01), labels = scales::percent_format(accuracy = 1)) +
   scale_y_discrete(labels = c("Pfizer/\nBioNTech\n(8:162)\n(n=43,538)", "Moderna\n(5:90)\n(n=30,000)")) +
   labs(
     title = "COVID-19 Vaccine Efficacy Rates Estimation for Moderna & Pfizer/BioNTech (Posterior Distributions)",
@@ -117,10 +117,14 @@ mcmc_intervals(posterior,
       "\nCreated by: Andrew Kostandy"
     )
   ) +
-  theme(text = element_text(size = 18), plot.caption = element_text(hjust = 0))
+  theme(text = element_text(size = 15), plot.caption = element_text(hjust = 0))
 ```
 
-```{r, message=FALSE, fig.width=8}
+```{r}
+ggsave("mcmc_intervals.pdf", dpi = "retina", width = 12, height = 8)
+```
+
+```{r, message=FALSE, fig.width=6}
 mcmc_areas(
   posterior,
   pars = c("pfizer_vaccine_efficacy", "moderna_vaccine_efficacy"),
@@ -128,7 +132,7 @@ mcmc_areas(
   prob_outer = 1,
   point_est = "median"
 ) +
-  scale_x_continuous(breaks = seq(0, 1, 0.05), labels = scales::percent_format(accuracy = 1), limits = c(0.75, 1)) +
+  scale_x_continuous(breaks = seq(0, 1, 0.02), labels = scales::percent_format(accuracy = 1)) +
   scale_y_discrete(labels = c("Pfizer/\nBioNTech\n(8:162)\n(n=43,538)", "Moderna\n(5:90)\n(n=30,000)")) +
   labs(
     title = "COVID-19 Vaccine Efficacy Rates Estimation for Moderna & Pfizer/BioNTech (Posterior Distributions)",
@@ -145,8 +149,13 @@ mcmc_areas(
       "\nCreated by: Andrew Kostandy"
     )
   ) +
-  theme(text = element_text(size = 21), plot.caption = element_text(hjust = 0))
+  theme(text = element_text(size = 15), plot.caption = element_text(hjust = 0))
 ```
+
+```{r}
+ggsave("mcmc_areas.pdf", dpi = "retina", width = 12, height = 8)
+```
+
 
 ```{r}
 # Probability Pfizer's vaccine has a higher efficacy than Moderna's
