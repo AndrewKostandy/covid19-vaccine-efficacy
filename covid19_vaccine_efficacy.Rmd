@@ -70,8 +70,8 @@ model {
 generated quantities {
   real moderna_vaccine_efficacy;
   real pfizer_vaccine_efficacy;
-  moderna_vaccine_efficacy = 1-((moderna_vacc_rate*moderna_vacc_n) / (moderna_plac_rate*moderna_plac_n));
-  pfizer_vaccine_efficacy = 1-((pfizer_vacc_rate*pfizer_vacc_n) / (pfizer_plac_rate*pfizer_plac_n));
+  moderna_vaccine_efficacy = 1-(moderna_vacc_rate / moderna_plac_rate);
+  pfizer_vaccine_efficacy = 1-(pfizer_vacc_rate / pfizer_plac_rate);
 }
 "
 
